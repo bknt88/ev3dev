@@ -12,7 +12,7 @@ ev3.speaker.set_volume(90)
 ev3.speaker.set_speech_options(language="en", voice="f2", speed=160)
 
 # 预设城市列表
-cities_menu = ["Beijing", "Stockholm", "Changsha"]
+cities_menu = ["Stockholm", "Norrviken", "Malmo", "Uppsala", "Solna", "Göteborg", "Helenelund", "Beijing", "Changsha", "WuHhn", "Xian", "Shenzhen", "Shanghai", "Hainan", "Yangzhou", "Oslo", "Frankfurt", "Berlin", "Paris", "London", "Barcelona", "Newyork"]
 
 # 初始化菜单并绘制
 menu = TextMenu(ev3, cities_menu)
