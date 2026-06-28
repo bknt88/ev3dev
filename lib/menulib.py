@@ -1,65 +1,78 @@
 from pybricks.parameters import Button
-from pybricks.media.ev3dev import Font
 from pybricks.tools import wait
 
+
 class TextMenu:
-    def __init__(self, ev3_instance, options_array, font_size=12):
-        """
-        初始化自訂菜單。
-        options_array: 選項文字陣列
-        font_size: 字型大小，若外部未傳入則預設為 12 像素
-        """
-        self.ev3 = ev3_instance
-        self.options = options_array
-        self.current_index = 0
-        self.total_options = len(options_array)
-        
-        # 核心優化：動態套用外部傳入（或預設）的點陣字型大小
-        try:
-            self.menu_font = Font(family='courier', size=font_size)
-        except Exception:
-            self.menu_font = Font(size=font_size)
+    """A simple text-based menu for the EV3 screen."""
 
-        self.ev3.screen.set_font(self.menu_font)
+    def __init__(self, ev3, title, rows, items):
+        """
+        Initialize a text menu.
 
-    def draw(self):
+        Args:
+            ev3: EV3Brick instance.
+            title: Menu title.
+            rows: Maximum number of menu rows. Currently unused and
+                  reserved for future scrolling support.
+            items: List of menu item strings.
         """
-        清空螢幕並使用設定好的字型繪製帶有 > 游標的字符界面
-        """
+        self.ev3 = ev3
+        self.title = title
+        self.rows = rows
+        self.items = items
+        self.selected = 0
+
+    def _refresh(self):
+        """Refresh the menu display."""
+
         self.ev3.screen.clear()
-        self.ev3.screen.print("--- EV3 SELECT MENU ---")
-        self.ev3.screen.print("^/v to select, [] to ok")
-        self.ev3.screen.print("-----------------------")
-        
-        for i in range(self.total_options):
-            if i == self.current_index:
-                # 選中的項目：加上 > 前綴
-                self.ev3.screen.print("> [{}] {}".format(i + 1, self.options[i]))
-            else:
-                # 未選中的項目：保持空白對齊
-                self.ev3.screen.print("  [{}] {}".format(i + 1, self.options[i]))
 
-    def get_choice(self):
+        self.ev3.screen.print(self.title)
+        self.ev3.screen.print()
+
+        for index, item in enumerate(self.items):
+            prefix = ">" if index == self.selected else " "
+            self.ev3.screen.print("{} {}".format(prefix, item))
+
+    def _wait_for_button_release(self):
+        """Wait until all buttons have been released."""
+
+        while self.ev3.buttons.pressed():
+            wait(10)
+
+    def run(self):
         """
-        監聽實體按鍵。
-        返回選中的索引值 (int)，未確認則返回 None
+        Display the menu.
+
+        Returns:
+            The selected menu item, or -1 if the menu is cancelled.
         """
-        pressed_keys = self.ev3.buttons.pressed()
 
-        if Button.UP in pressed_keys:
-            self.current_index = (self.current_index - 1) % self.total_options
-            self.draw()
-            wait(200)  # 防彈跳連點延遲
+        self._refresh()
 
-        elif Button.DOWN in pressed_keys:
-            self.current_index = (self.current_index + 1) % self.total_options
-            self.draw()
-            wait(200)
+        while True:
+            buttons = self.ev3.buttons.pressed()
 
-        elif Button.CENTER in pressed_keys:
-            wait(200)
-            return self.current_index
+            if Button.UP in buttons:
+                if self.selected > 0:
+                    self.selected -= 1
+                    self._refresh()
 
-        wait(50)
-        return None
+                self._wait_for_button_release()
 
+            elif Button.DOWN in buttons:
+                if self.selected < len(self.items) - 1:
+                    self.selected += 1
+                    self._refresh()
+
+                self._wait_for_button_release()
+
+            elif Button.LEFT in buttons:
+                self._wait_for_button_release()
+                return -1, None
+
+            elif Button.CENTER in buttons or Button.RIGHT in buttons:
+                self._wait_for_button_release()
+                return self.selected, self.items[self.selected]
+
+            wait(10)
