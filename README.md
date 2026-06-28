@@ -1,15 +1,10 @@
-# EV3 IoT Weather Report System
+# EV3 IoT PDA
 
-A modular, Object-Oriented (OOP) IoT application built on **Pybricks MicroPython (v2.0)** for the LEGO Mindstorms EV3. This project turns the EV3 brick into an intelligent weather forecasting agent. It fetches real-time public weather matrices via terminal pipes, renders clean ASCII weather art using standard monospace typography, and vocalizes meteorological summaries.
+Modular, Object-Oriented (OOP) IoT applications built on **Pybricks MicroPython (v2.0)** for the LEGO Mindstorms EV3. This project turns the EV3 brick into an intelligent personal digital assistance. It fetches real-time public data via internet, renders clean ASCII weather art, stock info using standard monospace typography, and vocalizes meteorological summaries.
 
 ---
 
-## 💎 Core Architectural Features
-
-*   **Modular OOP Design**: Features strict decoupling of business modules. UI rendering (`TextMenu`) and backend API operations (`WeatherFetcher`) live in separate self-contained custom libraries.
-*   **Dual-API Data Polymorphism**: A single user selection triggers concurrent target data streams: an ASCII diagram cropped exclusively for physical screen output, and a text-based format containing conditions, temperature, humidity, and wind speed optimized for vocal performance.
-*   **Monospace ASCII Alignment**: Overrides the standard Lucida proportional font with Linux-native `Courier` point-matrices to guarantee pixel-perfect symmetry for terminal weather art.
-*   **Fail-Safe Interceptions**: Outage isolation protocols catch network drops or API server timeouts, redirecting output gracefully to dynamic localized error strings.
+## Core Architectural Features
 
 ---
 
@@ -39,16 +34,14 @@ brickrun src/weather_report.py
 
 ---
 
-## ⚙️ Core API Implementation Specs
+## Core API Implementation Specs
 
-### Speech Serialization Format
+### Weather report
 Fetches verbal descriptors directly from cloud endpoints to bypass string tokenization bottlenecks:
 ```bash
 http://wttr.in/{City}?format=%C,+%t,+humidity+%h,+wind+%w
 ```
 *Vocalized Output:* `"In Stockholm, the condition is Clear, and the temperature is +18C, humidity 65%, wind 11km/h."`
-
-### Screen ASCII Map Format
 Fetches a lightweight, current-condition-only terminal panel stripped of ANSI escape codes (`&T` parameter) to fit inside the EV3 LCD boundaries cleanly:
 ```bash
 http://wttr.in/{City}?0&T
