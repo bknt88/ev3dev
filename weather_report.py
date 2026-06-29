@@ -23,13 +23,13 @@ ev3.screen.set_font(text_font)
 
 # 3. Define dataset layers for the menu instance
 menu_title = "Realtime Weather"
-cities = ["Stockholm", "Norrviken", "Malmo", "Uppsala", "Solna", "Göteborg", "Helenelund", "Beijing", "Changsha", "WuHhn", "Xian", "Shenzhen", "Shanghai", "Hainan", "Yangzhou", "Oslo", "Frankfurt", "Berlin", "Paris", "London", "Barcelona", "Newyork"]
+cities = ["Stockholm", "Norrviken", "Malmo", "Uppsala", "Solna", "Göteborg", "Helenelund", "Beijing", "Changsha", "Wuhan", "Xian", "Shenzhen", "Shanghai", "Hainan", "Yangzhou", "Oslo", "Frankfurt", "Berlin", "Paris", "London", "Barcelona", "Newyork"]
 
 # 4. Instantiate the decoupled text menu framework
 menu = TextMenu(
     ev3=ev3,
     title=menu_title,
-    rows=8,
+    rows=7,
     items=cities
 )
 

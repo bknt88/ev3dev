@@ -30,9 +30,14 @@ class TextMenu:
         self.ev3.screen.print(self.title)
         self.ev3.screen.print()
 
-        for index, item in enumerate(self.items):
+        start = self.selected // self.rows * self.rows
+        end = start + self.rows
+        if end > len(self.items):
+            end = len(self.items)
+
+        for index in range(start, end):
             prefix = ">" if index == self.selected else " "
-            self.ev3.screen.print("{} {}".format(prefix, item))
+            self.ev3.screen.print("{} {}".format(prefix, self.items[index]))
 
     def _wait_for_button_release(self):
         """Wait until all buttons have been released."""
